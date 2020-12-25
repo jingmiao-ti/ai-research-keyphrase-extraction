@@ -11,23 +11,35 @@ class InputTextObj:
 
     def __init__(self, pos_tagged, lang, stem=False, min_word_len=3):
         """
-        :param pos_tagged: List of list : Text pos_tagged as a list of sentences
+        :param pos_tagged: List of list : Text pos_tagged as a list of sentences    
         where each sentence is a list of tuple (word, TAG).
+            eg: 
+                sentence: 'Write your python code in a .py file. Thank you.'
+                tagged =  [
+                     [('Write', 'VB'), ('your', 'PRP$'), ('python', 'NN'),
+                     ('code', 'NN'), ('in', 'IN'), ('a', 'DT'), ('.', '.'), ('py', 'NN'), ('file', 'NN'), ('.', '.')
+                     ],
+                     [('Thank', 'VB'), ('you', 'PRP'), ('.', '.')]
+                      ]
+
         :param stem: If we want to apply stemming on the text.
         """
         self.min_word_len = min_word_len
-        self.considered_tags = {'NN', 'NNS', 'NNP', 'NNPS', 'JJ'}
+        # 候选词性：常用名词单数形式/常用名词复数形式/专有名词单数形式/专有名词复数形式/形容词
+        self.considered_tags = {'NN', 'NNS', 'NNP', 'NNPS', 'JJ'}  
         self.pos_tagged = []
         self.filtered_pos_tagged = []
         self.isStemmed = stem
         self.lang = lang
 
         if stem:
-            stemmer = PorterStemmer()
+            # 词干提取，如print(porter_stemmer.stem('looked'))   print(porter_stemmer.stem('looking'))  输出 look look
+            stemmer = PorterStemmer()  
             self.pos_tagged = [[(stemmer.stem(t[0]), t[1]) for t in sent] for sent in pos_tagged]
         else:
             self.pos_tagged = [[(t[0].lower(), t[1]) for t in sent] for sent in pos_tagged]
-
+        
+        # 将单词长度低于3个字母的词性标注为'LESS'
         temp = []
         for sent in self.pos_tagged:
             s = []
@@ -44,6 +56,7 @@ class InputTextObj:
             self.pos_tagged = [[(tagged_token[0], convert(tagged_token[1])) for tagged_token in sentence] for sentence
                                in
                                self.pos_tagged]
+        # 保留候选词性的词语
         self.filtered_pos_tagged = [[(t[0].lower(), t[1]) for t in sent if self.is_candidate(t)] for sent in
                                     self.pos_tagged]
 
@@ -57,7 +70,8 @@ class InputTextObj:
 
     def extract_candidates(self):
         """
-        :return: set of all candidates word
+        :return: set of all candidates word 
+           eg：{'code', 'file', 'python'}
         """
         return {tagged_token[0].lower()
                 for sentence in self.pos_tagged
