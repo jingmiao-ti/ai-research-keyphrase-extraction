@@ -124,6 +124,9 @@ class PosTaggingStanford(PosTagging):
         :param model_path_directory: path of the model directory
         :param jar_path: path of the jar for StanfordPOSTagger (override the configuration file)
         :param separator: Separator between a token and a tag in the resulting string (default : |)
+        
+        
+
 
         """
 
@@ -148,6 +151,24 @@ class PosTaggingStanford(PosTagging):
         """
         Implementation of abstract method from PosTagging
         @see PosTagging
+        
+        
+       >>pt.pos_tag_raw_text('Write your python code in a .py file. Thank you.')
+        return: 
+        if as_tuple_list = True
+            
+           
+            [
+                [('Write', 'VB'), ('your', 'PRP$'), ('python', 'NN'),
+                ('code', 'NN'), ('in', 'IN'), ('a', 'DT'), ('.', '.'), ('py', 'NN'), ('file', 'NN'), ('.', '.')
+                ],
+                [('Thank', 'VB'), ('you', 'PRP'), ('.', '.')]
+            ]
+        
+        else:
+        
+             'Write|VB your|PRP$ python|NN code|NN in|IN a|DT .|. py|NN file|NN .|.[ENDSENT]Thank|VB you|PRP .|.'
+        
         """
         tagged_text = self.tagger.tag_sents([self.sent_tokenizer.sentences_from_text(text)])
 
@@ -202,6 +223,19 @@ class PosTaggingCoreNLP(PosTagging):
         # Ony raw_tag_sents is available but assumes a list of str (so it assumes the sentence are already split)
         # We create a small custom function highly inspired from raw_tag_sents to do both
 
+        """
+        >>pt.pos_tag_raw_text('Write your python code in a .py file. Thank you.')
+        
+        return 
+        if as_tuple_list:[
+            [('Write', 'VB'), ('your', 'PRP$'), ('python', 'NN'),
+            ('code', 'NN'), ('in', 'IN'), ('a', 'DT'), ('.', '.'), ('py', 'NN'), ('file', 'NN'), ('.', '.')
+            ],
+            [('Thank', 'VB'), ('you', 'PRP'), ('.', '.')]
+        
+        return: 'Write|VB your|PRP$ python|NN code|NN in|IN a|DT .|. py|NN file|NN .|.[ENDSENT]Thank|VB you|PRP .|.'
+        ]
+        """
         def raw_tag_text():
             """
             Perform tokenizing sentence splitting and PosTagging and keep the 
