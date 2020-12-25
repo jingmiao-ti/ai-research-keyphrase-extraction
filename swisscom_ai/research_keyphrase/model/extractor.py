@@ -3,6 +3,8 @@
 #
 #Authors: Kamil Bennani-Smires, Yann Savary
 
+# 此部分为论文第一步。对候选关键词进行过滤提取
+
 """Contain method that return list of candidate"""
 
 import re
