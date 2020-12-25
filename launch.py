@@ -24,8 +24,21 @@ def extract_keyphrases(embedding_distrib, ptagger, raw_text, N, lang, beta=0.55,
     2)list of associated relevance scores (list of float)
     3)list containing for each keyphrase a list of alias (list of list of string)
     """
+    # 词性标注
+    # raw_text = 'Write your python code in a .py file. Thank you.'
+    # tagged =  [
+    #             [('Write', 'VB'), ('your', 'PRP$'), ('python', 'NN'),
+    #             ('code', 'NN'), ('in', 'IN'), ('a', 'DT'), ('.', '.'), ('py', 'NN'), ('file', 'NN'), ('.', '.')
+    #             ],
+    #             [('Thank', 'VB'), ('you', 'PRP'), ('.', '.')]
+    #         ]
+
     tagged = ptagger.pos_tag_raw_text(raw_text)
+    
+    # 对tagged进行处理
+    # each sentence is a list of tuple (word, TAG).
     text_obj = InputTextObj(tagged, lang)
+    
     return MMRPhrase(embedding_distrib, text_obj, N=N, beta=beta, alias_threshold=alias_threshold)
 
 
@@ -64,4 +77,4 @@ if __name__ == '__main__':
 
     embedding_distributor = load_local_embedding_distributor()
     pos_tagger = load_local_corenlp_pos_tagger(args.tagger_host, args.tagger_port)
-    print(extract_keyphrases(embedding_distributor, pos_tagger, raw_text, args.N, 'en'))
+    print(extract_keyphrases(embedding_distributor, pos_tagger, raw_text, args.N, 'en'))  # 输出关键词，关键词与文档的相关性分数，关键词与其他候选关键词的相似性大的候选关键词
