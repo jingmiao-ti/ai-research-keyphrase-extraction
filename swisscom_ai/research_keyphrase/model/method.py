@@ -72,7 +72,7 @@ def _MMR(embdistrib, text_obj, candidates, X, beta, N, use_filtered, alias_thres
 
     # Not using normalized version of doc_sim for computing relevance
     relevance_list = max_normalization(doc_sim[selected_candidates]).tolist()  # each value is multiplied by 1/max value
-    aliases_list = get_aliases(sim_between[selected_candidates, :], candidates, alias_threshold)  # Find candidates which are very similar to the keyphrases (aliases) 返回已选关键词与候选词之间的相似度大于阈值的，即比较相似的
+    aliases_list = get_aliases(sim_between[selected_candidates, :], candidates, alias_threshold)  # Find candidates which are very similar to the keyphrases (aliases) 返回已选关键词与候选词之间的相似度大于阈值的候选关键词列表，即比较相似的
 
     return candidates[selected_candidates].tolist(), relevance_list, aliases_list
 
